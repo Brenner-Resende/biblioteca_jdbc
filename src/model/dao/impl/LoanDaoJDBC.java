@@ -28,7 +28,7 @@ public class LoanDaoJDBC implements LoanDao{
 	public void insert(Loan obj) {
 	    PreparedStatement st = null;
 	    try {
-	        // Verificar exemplares disponíveis
+
 	        PreparedStatement checkSt = null;
 	        ResultSet checkRs = null;
 	        try {
@@ -48,12 +48,12 @@ public class LoanDaoJDBC implements LoanDao{
 	            DB.closeResultSet(checkRs);
 	            DB.closeStatement(checkSt);
 	        }
-	        // Verificar validade das datas
+
 	        if (obj.getReturnDate() != null && !obj.getReturnDate().after(obj.getCheckoutDate())) {
 	            throw new DbException("Return date must be after the checkout date!");
 	        }
 
-	        // Inserir novo empréstimo
+
 	        st = conn.prepareStatement(
 	            "INSERT INTO emprestimo (id_usuario, id_livro, data_emprestimo, data_devolucao) VALUES (?, ?, ?, ?)",
 	            Statement.RETURN_GENERATED_KEYS
@@ -80,7 +80,7 @@ public class LoanDaoJDBC implements LoanDao{
 	            throw new DbException("Unexpected error! No rows affected!");
 	        }
 
-	        // Decrementar exemplares disponíveis se data de devolução for NULL
+
 	        if (obj.getReturnDate() == null) {
 	            PreparedStatement updateSt = null;
 	            try {
@@ -107,7 +107,6 @@ public class LoanDaoJDBC implements LoanDao{
 
 	@Override
 	public void update(Loan obj) {
-		// TODO Auto-generated method stub
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
@@ -120,11 +119,11 @@ public class LoanDaoJDBC implements LoanDao{
 			st.setInt(3, obj.getBook().getId());
 			st.setInt(4, obj.getUser().getId());
 			st.setInt(5, obj.getId());
-	        // Verificar validade das datas
+
 	        if (obj.getReturnDate() != null && !obj.getReturnDate().after(obj.getCheckoutDate())) {
 	            throw new DbException("Return date must be after the checkout date!");
 	        }
-	        // Verificar se o livro foi devolvido
+
 	        if(obj.getReturnDate() != null) {
 	        	PreparedStatement updateSt = null;
 	            try {
@@ -177,18 +176,18 @@ public class LoanDaoJDBC implements LoanDao{
 		ResultSet rs = null;
 		try {
 			st = conn.prepareStatement(
-					"SELECT \r\n"
-					+ "    emprestimo.*, \r\n"
-					+ "    usuario.*, \r\n"
-					+ "    livro.*\r\n"
-					+ "FROM \r\n"
-					+ "    emprestimo\r\n"
-					+ "INNER JOIN \r\n"
-					+ "    usuario ON emprestimo.id_usuario = usuario.id_usuario\r\n"
-					+ "INNER JOIN \r\n"
-					+ "    livro ON emprestimo.id_livro = livro.id_livro\r\n"
-					+ "WHERE \r\n"
-					+ "    emprestimo.id_emprestimo = ?;"
+					"SELECT "
+					+ "emprestimo.*, "
+					+ "usuario.*, "
+					+ "livro.* "
+					+ "FROM "
+					+ "emprestimo "
+					+ "INNER JOIN "
+					+ "usuario ON emprestimo.id_usuario = usuario.id_usuario "
+					+ "INNER JOIN "
+					+ "livro ON emprestimo.id_livro = livro.id_livro "
+					+ "WHERE "
+					+ "emprestimo.id_emprestimo = ?;"
 					);
 			st.setInt(1, id);
 			rs = st.executeQuery();

@@ -17,7 +17,7 @@ public class Program {
 
 	public static void main(String[] args) throws ParseException {
 		
-
+		//Aplicação principal utilizada para testar as funcionalidades
 		
 		LoanDao loanDao = DaoFactory.createLoanDao();
 		UserDao userDao = DaoFactory.createUserDao();
